@@ -80,3 +80,7 @@ required = [
 [[override]]
   revision = "411b2483e5034420675ebcdd4a55fc76fe5e55cf"
   name = "k8s.io/kube-openapi"
+
+[[constraint]]
+  name = "k8s.io/helm"
+  version = "2.14.3"

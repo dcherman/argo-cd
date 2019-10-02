@@ -97,6 +97,17 @@ func (e Env) Environ() []string {
 	return environ
 }
 
+// ValuesFromSource represents a source of values.
+// Only one of its fields may be set.
+type ValuesFromSource struct {
+	// Selects a key of a ConfigMap.
+	// +optional
+	ConfigMapKeyRef *v1.ConfigMapKeySelector `json:"configMapKeyRef,omitempty" protobuf:"bytes,1,opt,name=configMapKeyRef"`
+	// Selects a key of a Secret.
+	// +optional
+	SecretKeyRef *v1.SecretKeySelector `json:"secretKeyRef,omitempty" protobuf:"bytes,2,opt,name=secretKeyRef"`
+}
+
 // ApplicationSource contains information about github repository, path within repository and target application environment.
 type ApplicationSource struct {
 	// RepoURL is the repository URL of the application manifests
@@ -163,6 +174,8 @@ type ApplicationSourceHelm struct {
 	ReleaseName string `json:"releaseName,omitempty" protobuf:"bytes,3,opt,name=releaseName"`
 	// Values is Helm values, typically defined as a block
 	Values string `json:"values,omitempty" protobuf:"bytes,4,opt,name=values"`
+	// ValuesFrom are other sources such as configmaps and secrets to source values from
+	ValuesFrom []ValuesFromSource `json:"valuesFrom,omitempty" protobuf:"bytes,5,rep,name=valuesFrom"`
 }
 
 // HelmParameter is a parameter to a helm template

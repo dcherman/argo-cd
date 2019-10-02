@@ -164,6 +164,9 @@ message ApplicationSourceHelm {
 
   // Values is Helm values, typically defined as a block
   optional string values = 4;
+
+  // ValuesFrom are other sources such as configmaps and secrets to source values from
+  repeated ValuesFromSource valuesFrom = 5;
 }
 
 // ApplicationSourceJsonnet holds jsonnet specific options
@@ -900,5 +903,17 @@ message TLSClientConfig {
   // CAData holds PEM-encoded bytes (typically read from a root certificates bundle).
   // CAData takes precedence over CAFile
   optional bytes caData = 5;
+}
+
+// ValuesFromSource represents a source of values.
+// Only one of its fields may be set.
+message ValuesFromSource {
+  // Selects a key of a ConfigMap.
+  // +optional
+  optional k8s.io.api.core.v1.ConfigMapKeySelector configMapKeyRef = 1;
+
+  // Selects a key of a Secret.
+  // +optional
+  optional k8s.io.api.core.v1.SecretKeySelector secretKeyRef = 2;
 }
 

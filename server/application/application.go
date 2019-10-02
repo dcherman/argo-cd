@@ -196,6 +196,13 @@ func (s *Server) GetManifests(ctx context.Context, q *application.ApplicationMan
 	if err != nil {
 		return nil, err
 	}
+
+	additionalHelmValues, err := argoutil.ResolveHelmValues(s.kubeclientset, s.ns, &a.Spec)
+
+	if err != nil {
+		return nil, err
+	}
+
 	kustomizeOptions := appv1.KustomizeOptions{
 		BuildOptions: buildOptions,
 	}
@@ -208,16 +215,17 @@ func (s *Server) GetManifests(ctx context.Context, q *application.ApplicationMan
 		return nil, err
 	}
 	manifestInfo, err := repoClient.GenerateManifest(ctx, &apiclient.ManifestRequest{
-		Repo:              repo,
-		Revision:          revision,
-		AppLabelKey:       appInstanceLabelKey,
-		AppLabelValue:     a.Name,
-		Namespace:         a.Spec.Destination.Namespace,
-		ApplicationSource: &a.Spec.Source,
-		Repos:             helmRepos,
-		Plugins:           plugins,
-		KustomizeOptions:  &kustomizeOptions,
-		KubeVersion:       cluster.ServerVersion,
+		Repo:                 repo,
+		Revision:             revision,
+		AppLabelKey:          appInstanceLabelKey,
+		AppLabelValue:        a.Name,
+		Namespace:            a.Spec.Destination.Namespace,
+		ApplicationSource:    &a.Spec.Source,
+		Repos:                helmRepos,
+		Plugins:              plugins,
+		KustomizeOptions:     &kustomizeOptions,
+		KubeVersion:          cluster.ServerVersion,
+		AdditionalHelmValues: additionalHelmValues,
 	})
 	if err != nil {
 		return nil, err

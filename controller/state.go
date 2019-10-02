@@ -11,6 +11,7 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/cache"
 
 	"github.com/argoproj/argo-cd/common"
@@ -22,6 +23,7 @@ import (
 	"github.com/argoproj/argo-cd/reposerver/apiclient"
 	"github.com/argoproj/argo-cd/util"
 	"github.com/argoproj/argo-cd/util/argo"
+	argoutil "github.com/argoproj/argo-cd/util/argo"
 	"github.com/argoproj/argo-cd/util/db"
 	"github.com/argoproj/argo-cd/util/diff"
 	"github.com/argoproj/argo-cd/util/health"
@@ -76,6 +78,7 @@ type comparisonResult struct {
 
 // appStateManager allows to compare applications to git
 type appStateManager struct {
+	kubeclientset  kubernetes.Interface
 	metricsServer  *metrics.MetricsServer
 	db             db.ArgoDB
 	settingsMgr    *settings.SettingsManager
@@ -116,6 +119,12 @@ func (m *appStateManager) getRepoObjs(app *v1alpha1.Application, source v1alpha1
 		tools[i] = &plugins[i]
 	}
 
+	additionalHelmValues, err := argoutil.ResolveHelmValues(m.kubeclientset, m.namespace, &app.Spec)
+
+	if err != nil {
+		return nil, nil, nil, err
+	}
+
 	buildOptions, err := m.settingsMgr.GetKustomizeBuildOptions()
 	if err != nil {
 		return nil, nil, nil, err
@@ -128,6 +137,7 @@ func (m *appStateManager) getRepoObjs(app *v1alpha1.Application, source v1alpha1
 	if err != nil {
 		return nil, nil, nil, err
 	}
+
 	manifestInfo, err := repoClient.GenerateManifest(context.Background(), &apiclient.ManifestRequest{
 		Repo:              repo,
 		Repos:             helmRepos,
@@ -141,7 +151,8 @@ func (m *appStateManager) getRepoObjs(app *v1alpha1.Application, source v1alpha1
 		KustomizeOptions: &appv1.KustomizeOptions{
 			BuildOptions: buildOptions,
 		},
-		KubeVersion: cluster.ServerVersion,
+		KubeVersion:          cluster.ServerVersion,
+		AdditionalHelmValues: additionalHelmValues,
 	})
 	if err != nil {
 		return nil, nil, nil, err
@@ -509,6 +520,7 @@ func (m *appStateManager) persistRevisionHistory(app *v1alpha1.Application, revi
 // NewAppStateManager creates new instance of Ksonnet app comparator
 func NewAppStateManager(
 	db db.ArgoDB,
+	kubeclientset kubernetes.Interface,
 	appclientset appclientset.Interface,
 	repoClientset apiclient.Clientset,
 	namespace string,
@@ -523,6 +535,7 @@ func NewAppStateManager(
 		db:             db,
 		appclientset:   appclientset,
 		kubectl:        kubectl,
+		kubeclientset:  kubeclientset,
 		repoClientset:  repoClientset,
 		namespace:      namespace,
 		settingsMgr:    settingsMgr,
