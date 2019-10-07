@@ -271,6 +271,33 @@ func TestResolveHelmValues(t *testing.T) {
 		assert.Equal(t, "baz: quux\n", value)
 	})
 
+	t.Run("Alternate Key", func(t *testing.T) {
+		const testNamespace = "argocd"
+		spec := createHelmApplicationSpec()
+		spec.Source.Helm.ValuesFrom = append(spec.Source.Helm.ValuesFrom, argoappv1.ValuesFromSource{
+			ConfigMapKeyRef: &v1.ConfigMapKeySelector{
+				LocalObjectReference: v1.LocalObjectReference{
+					Name: "additional-helm-values",
+				},
+				Key: "other.yaml",
+			},
+		})
+
+		kubeclientset := fake.NewSimpleClientset(&v1.ConfigMap{
+			ObjectMeta: metav1.ObjectMeta{
+				Namespace: testNamespace,
+				Name:      "additional-helm-values",
+			},
+			Data: map[string]string{
+				"other.yaml": "baz: 'quux'\n",
+			},
+		})
+
+		value, err := ResolveHelmValues(kubeclientset, testNamespace, spec)
+		assert.Nil(t, err)
+		assert.Equal(t, "baz: quux\n", value)
+	})
+
 	t.Run("Multiple ConfigMap", func(t *testing.T) {
 		const testNamespace = "argocd"
 		spec := createHelmApplicationSpec()
@@ -369,6 +396,34 @@ func TestResolveHelmValues(t *testing.T) {
 			},
 			Data: map[string][]byte{
 				"values.yaml": []byte("baz: 'quux'\n"),
+			},
+		})
+
+		values, err := ResolveHelmValues(kubeclientset, testNamespace, spec)
+		assert.Nil(t, err)
+		assert.Equal(t, "baz: quux\n", values)
+	})
+
+	t.Run("Alternate Key Secret", func(t *testing.T) {
+		const testNamespace = "argocd"
+		spec := createHelmApplicationSpec()
+
+		spec.Source.Helm.ValuesFrom = append(spec.Source.Helm.ValuesFrom, argoappv1.ValuesFromSource{
+			SecretKeyRef: &v1.SecretKeySelector{
+				LocalObjectReference: v1.LocalObjectReference{
+					Name: "additional-helm-values",
+				},
+				Key: "alternate.yaml",
+			},
+		})
+
+		kubeclientset := fake.NewSimpleClientset(&v1.Secret{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      "additional-helm-values",
+				Namespace: testNamespace,
+			},
+			Data: map[string][]byte{
+				"alternate.yaml": []byte("baz: 'quux'\n"),
 			},
 		})
 
