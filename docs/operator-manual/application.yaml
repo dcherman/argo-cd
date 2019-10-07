@@ -36,7 +36,8 @@ spec:
 
           # Optional: If the configMapRef should be optional, you can denote it as such.
           # If it is not optional, the sync will fail if the configmap is not present or readable.
-          optional: true
+          # If not present, it defaults to false
+          optional: false
 
           # Optional: The key inside of the configmap to look for the values.yaml file.
           # If not present, it defaults to "values.yaml"
@@ -47,7 +48,8 @@ spec:
 
           # Optional: If the secret should be optional, you can denote it as such.
           # If it is not optional, the sync will fail if the secret is not present or readable.
-          optional: true
+          # If not present, it defaults to false
+          optional: false
 
           # Optional: The key inside of the secret to look for the values.yaml file.
           # If not present, it defaults to "values.yaml"
