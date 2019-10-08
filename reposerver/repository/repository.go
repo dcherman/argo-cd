@@ -225,33 +225,26 @@ func helmTemplate(appPath string, q *apiclient.ManifestRequest) ([]*unstructured
 		if appHelm.ReleaseName != "" {
 			templateOpts.Name = appHelm.ReleaseName
 		}
+
+		additionalValueSources := []string{appHelm.Values, q.AdditionalHelmValues}
 		templateOpts.Values = appHelm.ValueFiles
-		if appHelm.Values != "" {
-			file, err := ioutil.TempFile("", "values-*.yaml")
-			if err != nil {
-				return nil, err
+
+		for _, v := range additionalValueSources {
+			if v != "" {
+				file, err := ioutil.TempFile("", "values-*.yaml")
+				if err != nil {
+					return nil, err
+				}
+				p := file.Name()
+				defer func() { _ = os.RemoveAll(p) }()
+				err = ioutil.WriteFile(p, []byte(v), 0644)
+				if err != nil {
+					return nil, err
+				}
+				templateOpts.Values = append(templateOpts.Values, p)
 			}
-			p := file.Name()
-			defer func() { _ = os.RemoveAll(p) }()
-			err = ioutil.WriteFile(p, []byte(appHelm.Values), 0644)
-			if err != nil {
-				return nil, err
-			}
-			templateOpts.Values = append(templateOpts.Values, p)
 		}
-		if q.AdditionalHelmValues != "" {
-			file, err := ioutil.TempFile("", "values-*.yaml")
-			if err != nil {
-				return nil, err
-			}
-			p := file.Name()
-			defer func() { _ = os.RemoveAll(p) }()
-			err = ioutil.WriteFile(p, []byte(q.AdditionalHelmValues), 0644)
-			if err != nil {
-				return nil, err
-			}
-			templateOpts.Values = append(templateOpts.Values, p)
-		}
+
 		for _, p := range appHelm.Parameters {
 			if p.ForceString {
 				templateOpts.SetString[p.Name] = p.Value
