@@ -1789,6 +1789,44 @@
         }
       }
     },
+    "applicationv1alpha1ConfigMapKeySelector": {
+      "type": "object",
+      "title": "ConfigMapKeySelector is structurally is similar to the ConfigMapKeySelector available in\nKubernetes, however our key is defined as optional since we default to `values.yaml`",
+      "properties": {
+        "key": {
+          "type": "string",
+          "title": "The key to select.\n+optional"
+        },
+        "name": {
+          "description": "The ConfigMap to select from.",
+          "type": "string"
+        },
+        "optional": {
+          "type": "boolean",
+          "format": "boolean",
+          "title": "Specify whether the ConfigMap/Secret must be defined\n+optional"
+        }
+      }
+    },
+    "applicationv1alpha1SecretKeySelector": {
+      "type": "object",
+      "title": "SecretKeySelector is structurally is similar to the ConfigMapKeySelector/SecretKeySelector available in\nKubernetes, however our key is defined as optional since we default to `values.yaml`",
+      "properties": {
+        "key": {
+          "type": "string",
+          "title": "The key to select.\n+optional"
+        },
+        "name": {
+          "description": "The ConfigMap to select from.",
+          "type": "string"
+        },
+        "optional": {
+          "type": "boolean",
+          "format": "boolean",
+          "title": "Specify whether the ConfigMap/Secret must be defined\n+optional"
+        }
+      }
+    },
     "clusterClusterResponse": {
       "type": "object"
     },
@@ -2231,24 +2269,6 @@
         }
       }
     },
-    "v1ConfigMapKeySelector": {
-      "description": "Selects a key from a ConfigMap.",
-      "type": "object",
-      "properties": {
-        "key": {
-          "description": "The key to select.",
-          "type": "string"
-        },
-        "localObjectReference": {
-          "$ref": "#/definitions/v1LocalObjectReference"
-        },
-        "optional": {
-          "type": "boolean",
-          "format": "boolean",
-          "title": "Specify whether the ConfigMap or it's key must be defined\n+optional"
-        }
-      }
-    },
     "v1Event": {
       "description": "Event is a report of an event somewhere in the cluster.",
       "type": "object",
@@ -2437,16 +2457,6 @@
         "ip": {
           "type": "string",
           "title": "IP is set for load-balancer ingress points that are IP based\n(typically GCE or OpenStack load-balancers)\n+optional"
-        }
-      }
-    },
-    "v1LocalObjectReference": {
-      "description": "LocalObjectReference contains enough information to let you locate the\nreferenced object inside the same namespace.",
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "title": "Name of the referent.\nMore info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names\nTODO: Add other useful fields. apiVersion, kind, uid?\n+optional"
         }
       }
     },
@@ -2641,24 +2651,6 @@
         "uid": {
           "type": "string",
           "title": "UID of the referent.\nMore info: http://kubernetes.io/docs/user-guide/identifiers#uids"
-        }
-      }
-    },
-    "v1SecretKeySelector": {
-      "description": "SecretKeySelector selects a key of a Secret.",
-      "type": "object",
-      "properties": {
-        "key": {
-          "description": "The key of the secret to select from.  Must be a valid secret key.",
-          "type": "string"
-        },
-        "localObjectReference": {
-          "$ref": "#/definitions/v1LocalObjectReference"
-        },
-        "optional": {
-          "type": "boolean",
-          "format": "boolean",
-          "title": "Specify whether the Secret or it's key must be defined\n+optional"
         }
       }
     },
@@ -2989,7 +2981,7 @@
         },
         "valuesFrom": {
           "type": "array",
-          "title": "ValuesFrom are other sources such as configmaps and secrets to source values from",
+          "title": "ValuesFrom are other sources such as configmaps and secrets to source values from\n+optional",
           "items": {
             "$ref": "#/definitions/v1alpha1ValuesFromSource"
           }
@@ -4164,10 +4156,10 @@
       "type": "object",
       "properties": {
         "configMapKeyRef": {
-          "$ref": "#/definitions/v1ConfigMapKeySelector"
+          "$ref": "#/definitions/applicationv1alpha1ConfigMapKeySelector"
         },
         "secretKeyRef": {
-          "$ref": "#/definitions/v1SecretKeySelector"
+          "$ref": "#/definitions/applicationv1alpha1SecretKeySelector"
         }
       }
     },

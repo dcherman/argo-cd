@@ -507,37 +507,30 @@ spec:
                                     description: The key to select.
                                     type: string
                                   name:
-                                    description: 'Name of the referent. More info:
-                                      https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                      TODO: Add other useful fields. apiVersion, kind,
-                                      uid?'
+                                    description: The ConfigMap to select from.
                                     type: string
                                   optional:
-                                    description: Specify whether the ConfigMap or
-                                      it's key must be defined
+                                    description: Specify whether the ConfigMap/Secret
+                                      must be defined
                                     type: boolean
                                 required:
-                                - key
+                                - name
                                 type: object
                               secretKeyRef:
                                 description: Selects a key of a Secret.
                                 properties:
                                   key:
-                                    description: The key of the secret to select from.  Must
-                                      be a valid secret key.
+                                    description: The key to select.
                                     type: string
                                   name:
-                                    description: 'Name of the referent. More info:
-                                      https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                      TODO: Add other useful fields. apiVersion, kind,
-                                      uid?'
+                                    description: The ConfigMap to select from.
                                     type: string
                                   optional:
-                                    description: Specify whether the Secret or it's
-                                      key must be defined
+                                    description: Specify whether the ConfigMap/Secret
+                                      must be defined
                                     type: boolean
                                 required:
-                                - key
+                                - name
                                 type: object
                             type: object
                           type: array
@@ -793,35 +786,30 @@ spec:
                                 description: The key to select.
                                 type: string
                               name:
-                                description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                  TODO: Add other useful fields. apiVersion, kind,
-                                  uid?'
+                                description: The ConfigMap to select from.
                                 type: string
                               optional:
-                                description: Specify whether the ConfigMap or it's
-                                  key must be defined
+                                description: Specify whether the ConfigMap/Secret
+                                  must be defined
                                 type: boolean
                             required:
-                            - key
+                            - name
                             type: object
                           secretKeyRef:
                             description: Selects a key of a Secret.
                             properties:
                               key:
-                                description: The key of the secret to select from.  Must
-                                  be a valid secret key.
+                                description: The key to select.
                                 type: string
                               name:
-                                description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                  TODO: Add other useful fields. apiVersion, kind,
-                                  uid?'
+                                description: The ConfigMap to select from.
                                 type: string
                               optional:
-                                description: Specify whether the Secret or it's key
+                                description: Specify whether the ConfigMap/Secret
                                   must be defined
                                 type: boolean
                             required:
-                            - key
+                            - name
                             type: object
                         type: object
                       type: array
@@ -1048,37 +1036,30 @@ spec:
                                       description: The key to select.
                                       type: string
                                     name:
-                                      description: 'Name of the referent. More info:
-                                        https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                        TODO: Add other useful fields. apiVersion,
-                                        kind, uid?'
+                                      description: The ConfigMap to select from.
                                       type: string
                                     optional:
-                                      description: Specify whether the ConfigMap or
-                                        it's key must be defined
+                                      description: Specify whether the ConfigMap/Secret
+                                        must be defined
                                       type: boolean
                                   required:
-                                  - key
+                                  - name
                                   type: object
                                 secretKeyRef:
                                   description: Selects a key of a Secret.
                                   properties:
                                     key:
-                                      description: The key of the secret to select
-                                        from.  Must be a valid secret key.
+                                      description: The key to select.
                                       type: string
                                     name:
-                                      description: 'Name of the referent. More info:
-                                        https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                        TODO: Add other useful fields. apiVersion,
-                                        kind, uid?'
+                                      description: The ConfigMap to select from.
                                       type: string
                                     optional:
-                                      description: Specify whether the Secret or it's
-                                        key must be defined
+                                      description: Specify whether the ConfigMap/Secret
+                                        must be defined
                                       type: boolean
                                   required:
-                                  - key
+                                  - name
                                   type: object
                               type: object
                             type: array
@@ -1318,38 +1299,30 @@ spec:
                                             description: The key to select.
                                             type: string
                                           name:
-                                            description: 'Name of the referent. More
-                                              info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                              TODO: Add other useful fields. apiVersion,
-                                              kind, uid?'
+                                            description: The ConfigMap to select from.
                                             type: string
                                           optional:
-                                            description: Specify whether the ConfigMap
-                                              or it's key must be defined
+                                            description: Specify whether the ConfigMap/Secret
+                                              must be defined
                                             type: boolean
                                         required:
-                                        - key
+                                        - name
                                         type: object
                                       secretKeyRef:
                                         description: Selects a key of a Secret.
                                         properties:
                                           key:
-                                            description: The key of the secret to
-                                              select from.  Must be a valid secret
-                                              key.
+                                            description: The key to select.
                                             type: string
                                           name:
-                                            description: 'Name of the referent. More
-                                              info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                              TODO: Add other useful fields. apiVersion,
-                                              kind, uid?'
+                                            description: The ConfigMap to select from.
                                             type: string
                                           optional:
-                                            description: Specify whether the Secret
-                                              or it's key must be defined
+                                            description: Specify whether the ConfigMap/Secret
+                                              must be defined
                                             type: boolean
                                         required:
-                                        - key
+                                        - name
                                         type: object
                                     type: object
                                   type: array
@@ -1615,37 +1588,30 @@ spec:
                                         description: The key to select.
                                         type: string
                                       name:
-                                        description: 'Name of the referent. More info:
-                                          https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                          TODO: Add other useful fields. apiVersion,
-                                          kind, uid?'
+                                        description: The ConfigMap to select from.
                                         type: string
                                       optional:
-                                        description: Specify whether the ConfigMap
-                                          or it's key must be defined
+                                        description: Specify whether the ConfigMap/Secret
+                                          must be defined
                                         type: boolean
                                     required:
-                                    - key
+                                    - name
                                     type: object
                                   secretKeyRef:
                                     description: Selects a key of a Secret.
                                     properties:
                                       key:
-                                        description: The key of the secret to select
-                                          from.  Must be a valid secret key.
+                                        description: The key to select.
                                         type: string
                                       name:
-                                        description: 'Name of the referent. More info:
-                                          https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                          TODO: Add other useful fields. apiVersion,
-                                          kind, uid?'
+                                        description: The ConfigMap to select from.
                                         type: string
                                       optional:
-                                        description: Specify whether the Secret or
-                                          it's key must be defined
+                                        description: Specify whether the ConfigMap/Secret
+                                          must be defined
                                         type: boolean
                                     required:
-                                    - key
+                                    - name
                                     type: object
                                 type: object
                               type: array
@@ -1891,37 +1857,30 @@ spec:
                                         description: The key to select.
                                         type: string
                                       name:
-                                        description: 'Name of the referent. More info:
-                                          https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                          TODO: Add other useful fields. apiVersion,
-                                          kind, uid?'
+                                        description: The ConfigMap to select from.
                                         type: string
                                       optional:
-                                        description: Specify whether the ConfigMap
-                                          or it's key must be defined
+                                        description: Specify whether the ConfigMap/Secret
+                                          must be defined
                                         type: boolean
                                     required:
-                                    - key
+                                    - name
                                     type: object
                                   secretKeyRef:
                                     description: Selects a key of a Secret.
                                     properties:
                                       key:
-                                        description: The key of the secret to select
-                                          from.  Must be a valid secret key.
+                                        description: The key to select.
                                         type: string
                                       name:
-                                        description: 'Name of the referent. More info:
-                                          https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                          TODO: Add other useful fields. apiVersion,
-                                          kind, uid?'
+                                        description: The ConfigMap to select from.
                                         type: string
                                       optional:
-                                        description: Specify whether the Secret or
-                                          it's key must be defined
+                                        description: Specify whether the ConfigMap/Secret
+                                          must be defined
                                         type: boolean
                                     required:
-                                    - key
+                                    - name
                                     type: object
                                 type: object
                               type: array

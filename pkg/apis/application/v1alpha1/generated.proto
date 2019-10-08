@@ -166,6 +166,7 @@ message ApplicationSourceHelm {
   optional string values = 4;
 
   // ValuesFrom are other sources such as configmaps and secrets to source values from
+  // +optional
   repeated ValuesFromSource valuesFrom = 5;
 }
 
@@ -354,6 +355,21 @@ message ConfigManagementPlugin {
   optional Command init = 2;
 
   optional Command generate = 3;
+}
+
+// ConfigMapKeySelector is structurally is similar to the ConfigMapKeySelector available in
+// Kubernetes, however our key is defined as optional since we default to `values.yaml`
+message ConfigMapKeySelector {
+  // The ConfigMap to select from.
+  optional string name = 1;
+
+  // The key to select.
+  // +optional
+  optional string key = 2;
+
+  // Specify whether the ConfigMap/Secret must be defined
+  // +optional
+  optional bool optional = 3;
 }
 
 // ConnectionState contains information about remote resource connection state
@@ -786,6 +802,21 @@ message RevisionMetadata {
   optional string message = 4;
 }
 
+// SecretKeySelector is structurally is similar to the ConfigMapKeySelector/SecretKeySelector available in
+// Kubernetes, however our key is defined as optional since we default to `values.yaml`
+message SecretKeySelector {
+  // The ConfigMap to select from.
+  optional string name = 1;
+
+  // The key to select.
+  // +optional
+  optional string key = 2;
+
+  // Specify whether the ConfigMap/Secret must be defined
+  // +optional
+  optional bool optional = 3;
+}
+
 // SyncOperation contains sync operation details.
 message SyncOperation {
   // Revision is the revision in which to sync the application to.
@@ -910,10 +941,10 @@ message TLSClientConfig {
 message ValuesFromSource {
   // Selects a key of a ConfigMap.
   // +optional
-  optional k8s.io.api.core.v1.ConfigMapKeySelector configMapKeyRef = 1;
+  optional ConfigMapKeySelector configMapKeyRef = 1;
 
   // Selects a key of a Secret.
   // +optional
-  optional k8s.io.api.core.v1.SecretKeySelector secretKeyRef = 2;
+  optional SecretKeySelector secretKeyRef = 2;
 }
 

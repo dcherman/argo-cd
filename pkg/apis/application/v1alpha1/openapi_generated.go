@@ -40,6 +40,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/argoproj/argo-cd/pkg/apis/application/v1alpha1.ComparedTo":                       schema_pkg_apis_application_v1alpha1_ComparedTo(ref),
 		"github.com/argoproj/argo-cd/pkg/apis/application/v1alpha1.ComponentParameter":               schema_pkg_apis_application_v1alpha1_ComponentParameter(ref),
 		"github.com/argoproj/argo-cd/pkg/apis/application/v1alpha1.ConfigManagementPlugin":           schema_pkg_apis_application_v1alpha1_ConfigManagementPlugin(ref),
+		"github.com/argoproj/argo-cd/pkg/apis/application/v1alpha1.ConfigMapKeySelector":             schema_pkg_apis_application_v1alpha1_ConfigMapKeySelector(ref),
 		"github.com/argoproj/argo-cd/pkg/apis/application/v1alpha1.ConnectionState":                  schema_pkg_apis_application_v1alpha1_ConnectionState(ref),
 		"github.com/argoproj/argo-cd/pkg/apis/application/v1alpha1.EnvEntry":                         schema_pkg_apis_application_v1alpha1_EnvEntry(ref),
 		"github.com/argoproj/argo-cd/pkg/apis/application/v1alpha1.HealthStatus":                     schema_pkg_apis_application_v1alpha1_HealthStatus(ref),
@@ -74,6 +75,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/argoproj/argo-cd/pkg/apis/application/v1alpha1.ResourceStatus":                   schema_pkg_apis_application_v1alpha1_ResourceStatus(ref),
 		"github.com/argoproj/argo-cd/pkg/apis/application/v1alpha1.RevisionHistory":                  schema_pkg_apis_application_v1alpha1_RevisionHistory(ref),
 		"github.com/argoproj/argo-cd/pkg/apis/application/v1alpha1.RevisionMetadata":                 schema_pkg_apis_application_v1alpha1_RevisionMetadata(ref),
+		"github.com/argoproj/argo-cd/pkg/apis/application/v1alpha1.SecretKeySelector":                schema_pkg_apis_application_v1alpha1_SecretKeySelector(ref),
 		"github.com/argoproj/argo-cd/pkg/apis/application/v1alpha1.SyncOperation":                    schema_pkg_apis_application_v1alpha1_SyncOperation(ref),
 		"github.com/argoproj/argo-cd/pkg/apis/application/v1alpha1.SyncOperationResource":            schema_pkg_apis_application_v1alpha1_SyncOperationResource(ref),
 		"github.com/argoproj/argo-cd/pkg/apis/application/v1alpha1.SyncOperationResult":              schema_pkg_apis_application_v1alpha1_SyncOperationResult(ref),
@@ -1300,6 +1302,41 @@ func schema_pkg_apis_application_v1alpha1_ConfigManagementPlugin(ref common.Refe
 		},
 		Dependencies: []string{
 			"github.com/argoproj/argo-cd/pkg/apis/application/v1alpha1.Command"},
+	}
+}
+
+func schema_pkg_apis_application_v1alpha1_ConfigMapKeySelector(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ConfigMapKeySelector is structurally is similar to the ConfigMapKeySelector available in Kubernetes, however our key is defined as optional since we default to `values.yaml`",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The ConfigMap to select from.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"key": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The key to select.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"optional": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specify whether the ConfigMap/Secret must be defined",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
 	}
 }
 
@@ -2812,6 +2849,41 @@ func schema_pkg_apis_application_v1alpha1_RevisionMetadata(ref common.ReferenceC
 	}
 }
 
+func schema_pkg_apis_application_v1alpha1_SecretKeySelector(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SecretKeySelector is structurally is similar to the ConfigMapKeySelector/SecretKeySelector available in Kubernetes, however our key is defined as optional since we default to `values.yaml`",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The ConfigMap to select from.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"key": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The key to select.",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"optional": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Specify whether the ConfigMap/Secret must be defined",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
 func schema_pkg_apis_application_v1alpha1_SyncOperation(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -3168,20 +3240,20 @@ func schema_pkg_apis_application_v1alpha1_ValuesFromSource(ref common.ReferenceC
 					"configMapKeyRef": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Selects a key of a ConfigMap.",
-							Ref:         ref("k8s.io/api/core/v1.ConfigMapKeySelector"),
+							Ref:         ref("github.com/argoproj/argo-cd/pkg/apis/application/v1alpha1.ConfigMapKeySelector"),
 						},
 					},
 					"secretKeyRef": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Selects a key of a Secret.",
-							Ref:         ref("k8s.io/api/core/v1.SecretKeySelector"),
+							Ref:         ref("github.com/argoproj/argo-cd/pkg/apis/application/v1alpha1.SecretKeySelector"),
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/api/core/v1.ConfigMapKeySelector", "k8s.io/api/core/v1.SecretKeySelector"},
+			"github.com/argoproj/argo-cd/pkg/apis/application/v1alpha1.ConfigMapKeySelector", "github.com/argoproj/argo-cd/pkg/apis/application/v1alpha1.SecretKeySelector"},
 	}
 }
 

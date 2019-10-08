@@ -446,10 +446,11 @@ func ResolveHelmValues(kubeclientset kubernetes.Interface, ns string, h *argoapp
 				cm := v.ConfigMapKeyRef
 				name := cm.Name
 				key := cm.Key
+
 				if key == "" {
 					key = "values.yaml"
 				}
-				optional := cm.Optional != nil && *cm.Optional
+				optional := cm.Optional
 
 				configMap, err := kubeclientset.CoreV1().ConfigMaps(ns).Get(name, metav1.GetOptions{})
 				if err != nil {
@@ -480,7 +481,7 @@ func ResolveHelmValues(kubeclientset kubernetes.Interface, ns string, h *argoapp
 				if key == "" {
 					key = "values.yaml"
 				}
-				optional := s.Optional != nil && *s.Optional
+				optional := s.Optional
 				secret, err := kubeclientset.CoreV1().Secrets(ns).Get(name, metav1.GetOptions{})
 				if err != nil {
 					if apierr.IsNotFound(err) && optional {

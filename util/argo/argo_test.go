@@ -214,8 +214,6 @@ func createHelmApplicationSpec() *argoappv1.ApplicationSpec {
 }
 
 func TestResolveHelmValues(t *testing.T) {
-	trueValue := true
-
 	t.Run("Non Helm Application", func(t *testing.T) {
 		const testNamespace = "argocd"
 
@@ -249,10 +247,8 @@ func TestResolveHelmValues(t *testing.T) {
 		const testNamespace = "argocd"
 		spec := createHelmApplicationSpec()
 		spec.Source.Helm.ValuesFrom = append(spec.Source.Helm.ValuesFrom, argoappv1.ValuesFromSource{
-			ConfigMapKeyRef: &v1.ConfigMapKeySelector{
-				LocalObjectReference: v1.LocalObjectReference{
-					Name: "additional-helm-values",
-				},
+			ConfigMapKeyRef: &argoappv1.ConfigMapKeySelector{
+				Name: "additional-helm-values",
 			},
 		})
 
@@ -275,11 +271,9 @@ func TestResolveHelmValues(t *testing.T) {
 		const testNamespace = "argocd"
 		spec := createHelmApplicationSpec()
 		spec.Source.Helm.ValuesFrom = append(spec.Source.Helm.ValuesFrom, argoappv1.ValuesFromSource{
-			ConfigMapKeyRef: &v1.ConfigMapKeySelector{
-				LocalObjectReference: v1.LocalObjectReference{
-					Name: "additional-helm-values",
-				},
-				Key: "other.yaml",
+			ConfigMapKeyRef: &argoappv1.ConfigMapKeySelector{
+				Name: "additional-helm-values",
+				Key:  "other.yaml",
 			},
 		})
 
@@ -303,16 +297,12 @@ func TestResolveHelmValues(t *testing.T) {
 		spec := createHelmApplicationSpec()
 
 		spec.Source.Helm.ValuesFrom = append(spec.Source.Helm.ValuesFrom, argoappv1.ValuesFromSource{
-			ConfigMapKeyRef: &v1.ConfigMapKeySelector{
-				LocalObjectReference: v1.LocalObjectReference{
-					Name: "additional-helm-values",
-				},
+			ConfigMapKeyRef: &argoappv1.ConfigMapKeySelector{
+				Name: "additional-helm-values",
 			},
 		}, argoappv1.ValuesFromSource{
-			ConfigMapKeyRef: &v1.ConfigMapKeySelector{
-				LocalObjectReference: v1.LocalObjectReference{
-					Name: "more-additional-helm-values",
-				},
+			ConfigMapKeyRef: &argoappv1.ConfigMapKeySelector{
+				Name: "more-additional-helm-values",
 			},
 		})
 
@@ -344,11 +334,9 @@ func TestResolveHelmValues(t *testing.T) {
 		spec := createHelmApplicationSpec()
 
 		spec.Source.Helm.ValuesFrom = append(spec.Source.Helm.ValuesFrom, argoappv1.ValuesFromSource{
-			ConfigMapKeyRef: &v1.ConfigMapKeySelector{
-				Optional: &trueValue,
-				LocalObjectReference: v1.LocalObjectReference{
-					Name: "additional-helm-values",
-				},
+			ConfigMapKeyRef: &argoappv1.ConfigMapKeySelector{
+				Name:     "additional-helm-values",
+				Optional: true,
 			},
 		})
 
@@ -364,10 +352,8 @@ func TestResolveHelmValues(t *testing.T) {
 		spec := createHelmApplicationSpec()
 
 		spec.Source.Helm.ValuesFrom = append(spec.Source.Helm.ValuesFrom, argoappv1.ValuesFromSource{
-			ConfigMapKeyRef: &v1.ConfigMapKeySelector{
-				LocalObjectReference: v1.LocalObjectReference{
-					Name: "additional-helm-values",
-				},
+			ConfigMapKeyRef: &argoappv1.ConfigMapKeySelector{
+				Name: "additional-helm-values",
 			},
 		})
 
@@ -382,10 +368,8 @@ func TestResolveHelmValues(t *testing.T) {
 		spec := createHelmApplicationSpec()
 
 		spec.Source.Helm.ValuesFrom = append(spec.Source.Helm.ValuesFrom, argoappv1.ValuesFromSource{
-			SecretKeyRef: &v1.SecretKeySelector{
-				LocalObjectReference: v1.LocalObjectReference{
-					Name: "additional-helm-values",
-				},
+			SecretKeyRef: &argoappv1.SecretKeySelector{
+				Name: "additional-helm-values",
 			},
 		})
 
@@ -409,11 +393,9 @@ func TestResolveHelmValues(t *testing.T) {
 		spec := createHelmApplicationSpec()
 
 		spec.Source.Helm.ValuesFrom = append(spec.Source.Helm.ValuesFrom, argoappv1.ValuesFromSource{
-			SecretKeyRef: &v1.SecretKeySelector{
-				LocalObjectReference: v1.LocalObjectReference{
-					Name: "additional-helm-values",
-				},
-				Key: "alternate.yaml",
+			SecretKeyRef: &argoappv1.SecretKeySelector{
+				Name: "additional-helm-values",
+				Key:  "alternate.yaml",
 			},
 		})
 
@@ -437,16 +419,12 @@ func TestResolveHelmValues(t *testing.T) {
 		spec := createHelmApplicationSpec()
 
 		spec.Source.Helm.ValuesFrom = append(spec.Source.Helm.ValuesFrom, argoappv1.ValuesFromSource{
-			SecretKeyRef: &v1.SecretKeySelector{
-				LocalObjectReference: v1.LocalObjectReference{
-					Name: "additional-helm-values",
-				},
+			SecretKeyRef: &argoappv1.SecretKeySelector{
+				Name: "additional-helm-values",
 			},
 		}, argoappv1.ValuesFromSource{
-			SecretKeyRef: &v1.SecretKeySelector{
-				LocalObjectReference: v1.LocalObjectReference{
-					Name: "more-additional-helm-values",
-				},
+			SecretKeyRef: &argoappv1.SecretKeySelector{
+				Name: "more-additional-helm-values",
 			},
 		})
 
@@ -478,11 +456,9 @@ func TestResolveHelmValues(t *testing.T) {
 		spec := createHelmApplicationSpec()
 
 		spec.Source.Helm.ValuesFrom = append(spec.Source.Helm.ValuesFrom, argoappv1.ValuesFromSource{
-			SecretKeyRef: &v1.SecretKeySelector{
-				Optional: &trueValue,
-				LocalObjectReference: v1.LocalObjectReference{
-					Name: "additional-helm-values",
-				},
+			SecretKeyRef: &argoappv1.SecretKeySelector{
+				Name:     "additional-helm-values",
+				Optional: true,
 			},
 		})
 
@@ -498,10 +474,8 @@ func TestResolveHelmValues(t *testing.T) {
 		spec := createHelmApplicationSpec()
 
 		spec.Source.Helm.ValuesFrom = append(spec.Source.Helm.ValuesFrom, argoappv1.ValuesFromSource{
-			SecretKeyRef: &v1.SecretKeySelector{
-				LocalObjectReference: v1.LocalObjectReference{
-					Name: "additional-helm-values",
-				},
+			SecretKeyRef: &argoappv1.SecretKeySelector{
+				Name: "additional-helm-values",
 			},
 		})
 
