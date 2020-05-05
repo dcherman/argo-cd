@@ -628,6 +628,13 @@ func runConfigManagementPlugin(appPath string, envVars *v1alpha1.Env, q *apiclie
 	if plugin == nil {
 		return nil, fmt.Errorf("Config management plugin with name '%s' is not supported.", q.ApplicationSource.Plugin.Name)
 	}
+
+	applicationSourceJson, err := json.Marshal(q.ApplicationSource)
+
+	if err != nil {
+		return nil, fmt.Errorf("Unable to marshal application source to json: %v", err)
+	}
+
 	env := append(os.Environ(), envVars.Environ()...)
 	if creds != nil {
 		closer, environ, err := creds.Environ()
@@ -638,6 +645,7 @@ func runConfigManagementPlugin(appPath string, envVars *v1alpha1.Env, q *apiclie
 		env = append(env, environ...)
 	}
 	env = append(env, q.ApplicationSource.Plugin.Env.Environ()...)
+	env = append(env, "ARGOCD_APP_SOURCE="+string(applicationSourceJson))
 	env = append(env, "KUBE_VERSION="+q.KubeVersion)
 	env = append(env, "KUBE_API_VERSIONS="+strings.Join(q.ApiVersions, ","))
 	if plugin.Init != nil {

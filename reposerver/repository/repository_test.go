@@ -476,6 +476,45 @@ func TestRunCustomTool(t *testing.T) {
 	assert.Equal(t, "bar", obj.GetAnnotations()["GIT_PASSWORD"])
 }
 
+func TestCustomToolWithHelm(t *testing.T) {
+	service := newService("../..")
+
+	res, err := service.GenerateManifest(context.Background(), &apiclient.ManifestRequest{
+		AppLabelValue: "test-app",
+		Namespace:     "test-namespace",
+		Repo:          &argoappv1.Repository{},
+		ApplicationSource: &argoappv1.ApplicationSource{
+			Path: "./util/helm/testdata/redis",
+			Helm: &argoappv1.ApplicationSourceHelm{
+				ValueFiles: []string{"values-production.yaml"},
+				Values:     `cluster: {slaveCount: 2}`,
+			},
+			Plugin: &argoappv1.ApplicationSourcePlugin{
+				Name: "test",
+			},
+		},
+		Plugins: []*argoappv1.ConfigManagementPlugin{{
+			Name: "test",
+			Generate: argoappv1.Command{
+				Command: []string{"sh", "-c"},
+				Args:    []string{`echo "{\"kind\": \"FakeObject\", \"metadata\": { \"name\": \"$ARGOCD_APP_NAME\", \"namespace\": \"$ARGOCD_APP_NAMESPACE\"}, \"spec\": $ARGOCD_APP_SOURCE}"`},
+			},
+		}},
+	})
+
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(res.Manifests))
+
+	obj := struct {
+		Spec argoappv1.ApplicationSource `json:"spec"`
+	}{}
+
+	assert.Nil(t, json.Unmarshal([]byte(res.Manifests[0]), &obj))
+	assert.NotNil(t, obj.Spec.Helm)
+	assert.Equal(t, `cluster: {slaveCount: 2}`, obj.Spec.Helm.Values)
+	assert.Equal(t,  "./util/helm/testdata/redis", obj.Spec.Path)
+}
+
 func TestGenerateFromUTF16(t *testing.T) {
 	q := apiclient.ManifestRequest{
 		Repo:              &argoappv1.Repository{},

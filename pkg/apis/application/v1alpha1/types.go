@@ -2105,6 +2105,15 @@ func (source *ApplicationSource) Equals(other ApplicationSource) bool {
 
 func (source *ApplicationSource) ExplicitType() (*ApplicationSourceType, error) {
 	var appTypes []ApplicationSourceType
+
+	// Allow custom plugins to draw outside of the lines by allowing multiple different plugin
+	// types.  The exact behavior of how they're handled is the responsibility of the plugin
+	if source.Plugin != nil {
+		appTypes = append(appTypes, ApplicationSourceTypePlugin)
+		appType := appTypes[0]
+		return &appType, nil
+	}
+
 	if source.Kustomize != nil {
 		appTypes = append(appTypes, ApplicationSourceTypeKustomize)
 	}
@@ -2117,9 +2126,7 @@ func (source *ApplicationSource) ExplicitType() (*ApplicationSourceType, error) 
 	if source.Directory != nil {
 		appTypes = append(appTypes, ApplicationSourceTypeDirectory)
 	}
-	if source.Plugin != nil {
-		appTypes = append(appTypes, ApplicationSourceTypePlugin)
-	}
+
 	if len(appTypes) == 0 {
 		return nil, nil
 	}
